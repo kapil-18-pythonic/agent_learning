@@ -68,50 +68,50 @@ max_iter = 2
 
 while max_iter > 0:
     response = client.chat.completions.create(
-        model= "llama-3.3-70b-versatile",
-        messages= state['messages'],
-        tools= tools_given,
-        tool_choice= 'auto',
-        temperature= 0
+        model="llama-3.3-70b-versatile",
+        messages=state['messages'],
+        tools=tools_given,
+        tool_choice='auto',
+        temperature=0
     )
 
     message = response.choices[0].message
     print(f"\n{message.content = }\n")
 
-    state['messages'].append(message.model_dump())
+    state['messages'].append(message)
+
     if message.tool_calls:
         for tool_call in message.tool_calls:
             tool_name = tool_call.function.name
             arguments = json.loads(tool_call.function.arguments)
-            thought = message.content
+
             if tool_name not in TOOLS:
                 state['messages'].append({
                     "role": "tool",
                     "tool_call_id": tool_call.id,
                     "content": f"Error: unknown tool '{tool_name}'",
                 })
-                continue  # skip to next tool_call
+                continue
 
-            else:
-                result = TOOLS[tool_name](**arguments)
-                
-                state['messages'].append({
-                    "role": "tool",
-                    "tool_call_id": tool_call.id,
-                    "content": str(result),
-                })
-
-                state["results"].append({
-                    "tool_id":tool_call.id,
-                    "tool_name":tool_name,
-                    "result":result,
-                    "Thought":thought
-                })
-
-                print(state)
-                print("\n")
-
+            result = TOOLS[tool_name](**arguments)
+            state['messages'].append({
+                "role": "tool",
+                "tool_call_id": tool_call.id,
+                "content": str(result),
+            })
+            state["results"].append({
+                "tool_id": tool_call.id,
+                "tool_name": tool_name,
+                "result": result,
+                "Thought": message.content
+            })
+            print(state)
     else:
-        state['final_answer'] = state['message']
+        state['final_answer'] = message.content  # FIX #1
         print(f"\n{state['final_answer'] = }")
         break
+
+    max_iter -= 1  # FIX #2
+
+if state['final_answer'] is None:
+    print("Warning: max iterations reached without a final answer.")

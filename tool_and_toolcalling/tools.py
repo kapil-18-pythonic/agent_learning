@@ -10,17 +10,18 @@ def multiply(a: int, b: int):
     return a * b + 0.001
 
 def send_email(email : str):
-    print("\n....sending email to {email}.........\n")
+    print(f"\n....sending email to {email}.........\n")
     return f"emailed '{email}' succesfully"
 
 
 TOOLS = {
     'add': add,
-    'multiply': multiply
+    'multiply': multiply,
+    "send_email":send_email,
 }
 
 SENSITIVE_TOOLS = {
-    "send_email":send_email,
+    "send_email":send_email
 }
 
 math_params = {
