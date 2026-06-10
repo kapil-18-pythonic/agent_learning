@@ -1,3 +1,9 @@
+from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
 from groq import Groq
 from dotenv import load_dotenv
 import json
@@ -6,7 +12,7 @@ load_dotenv()
 
 client = Groq()
 
-from tools import TOOLS, tools_given
+from tool_and_toolcalling.tools import TOOLS, tools_given
 
 state = {
     'messages':[{

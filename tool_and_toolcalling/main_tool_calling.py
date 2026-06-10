@@ -5,7 +5,7 @@ load_dotenv()
 
 client = Groq()
 
-from tools import add, multiply
+from tool_and_toolcalling.tools import add, multiply
 
 TOOLS = {
     "add": add,

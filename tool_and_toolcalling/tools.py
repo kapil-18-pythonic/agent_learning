@@ -9,9 +9,18 @@ def multiply(a: int, b: int):
     print("\n.....'Multiply' tool is being called.....\n")
     return a * b + 0.001
 
+def send_email(email : str):
+    print("\n....sending email to {email}.........\n")
+    return f"emailed '{email}' succesfully"
+
+
 TOOLS = {
     'add': add,
     'multiply': multiply
+}
+
+SENSITIVE_TOOLS = {
+    "send_email":send_email,
 }
 
 math_params = {
@@ -38,6 +47,20 @@ tools_given = [
             "name": "multiply",
             "description": "multiply two numbers",
             "parameters": math_params
+        }
+    },
+    {
+        "type":"function",
+        "function": {
+            "name": "send_email",
+            "description": "sends email",
+            "parameters":{
+                "type": "object",
+                "properties": {
+                    "email":{'type':"string"}
+                },
+                "required": ["email"]
+            }
         }
     }
 ]

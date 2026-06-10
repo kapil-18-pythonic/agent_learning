@@ -6,7 +6,7 @@ load_dotenv()
 
 client = Groq()
 
-from tools import TOOLS, tools_given
+from tool_and_toolcalling.tools import TOOLS, tools_given
 
 task = """
 Plan how to solve:
