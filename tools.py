@@ -14,8 +14,6 @@ TOOLS = {
     'multiply': multiply
 }
 
-from tools import TOOLS
-
 math_params = {
                 "type": "object",
                 "properties": {

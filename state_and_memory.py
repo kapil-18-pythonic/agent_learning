@@ -16,7 +16,9 @@ state = {
     "final_answer":None,
 }
 
-while True:
+max_iteration = 1
+
+while max_iteration > 0:
     response = client.chat.completions.create(
         model= "llama-3.3-70b-versatile",
         messages= state['messages'],
@@ -27,7 +29,7 @@ while True:
 
     message = response.choices[0].message
     print(f"\n{message = }\n")
-    state['messages'].append(message)
+    state['messages'].append(message.model_dump())
 
     if message.tool_calls:
         for tool_call in message.tool_calls:
@@ -35,9 +37,13 @@ while True:
             arguments = json.loads(tool_call.function.arguments)
 
             if tool_name not in TOOLS:
-                print(f"tool {tool_name} : UNKNOWN_TOOL")
-                break
-            
+                state['messages'].append({
+                    "role": "tool",
+                    "tool_call_id": tool_call.id,
+                    "content": f"Error: unknown tool '{tool_name}'"
+                })
+                continue  # skip to next tool_call
+
             else:
                 result = TOOLS[tool_name](**arguments)
                 
@@ -59,4 +65,7 @@ while True:
     else:
         state['final_answer'] = message.content
         break
+
+    max_iteration -= 1
+
 print(state['final_answer'])

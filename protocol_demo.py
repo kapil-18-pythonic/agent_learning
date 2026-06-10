@@ -3,7 +3,7 @@ openai_response = {
         {
             "function":{
                 "name":"add",
-                "args":{"a": 15, "b": 27}
+                "arguments":{"a": 15, "b": 27}
             }
         }
     ]
@@ -33,7 +33,7 @@ gemini_response = {
 def parse_openai(openai_response):
     tool_calls = (openai_response["tool_calls"][0])
     tool_name = str(tool_calls['function']['name'])
-    tool_args = tool_calls['function']['args']
+    tool_args = tool_calls['function']['arguments']
     return (tool_name, tool_args)
 
 def parse_anthropic(anthropic_response):
